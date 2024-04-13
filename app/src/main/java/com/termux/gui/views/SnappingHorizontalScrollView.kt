@@ -40,20 +40,22 @@ class SnappingHorizontalScrollView(c: Context) : HorizontalScrollView(c) {
     }
 
     internal inner class MyGestureDetector : SimpleOnGestureListener() {
-        override fun onFling(e1: MotionEvent, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean {
+        override fun onFling(e1: MotionEvent?, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean {
             try {
                 val layout = getChildAt(0) as? ViewGroup ?: return false
                 //right to left
-                if (e1.x - e2.x > SWIPE_MIN_DISTANCE && abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-                    val featureWidth: Int = measuredWidth
-                    mActiveFeature = if (mActiveFeature < layout.childCount - 1) mActiveFeature + 1 else layout.childCount - 1
-                    smoothScrollTo(mActiveFeature * featureWidth, 0)
-                    return true
-                } else if (e2.x - e1.x > SWIPE_MIN_DISTANCE && abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-                    val featureWidth: Int = measuredWidth
-                    mActiveFeature = if (mActiveFeature > 0) mActiveFeature - 1 else 0
-                    smoothScrollTo(mActiveFeature * featureWidth, 0)
-                    return true
+                if (e1 != null) {
+                    if (e1.x - e2.x > SWIPE_MIN_DISTANCE && abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+                        val featureWidth: Int = measuredWidth
+                        mActiveFeature = if (mActiveFeature < layout.childCount - 1) mActiveFeature + 1 else layout.childCount - 1
+                        smoothScrollTo(mActiveFeature * featureWidth, 0)
+                        return true
+                    } else if (e2.x - e1.x > SWIPE_MIN_DISTANCE && abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+                        val featureWidth: Int = measuredWidth
+                        mActiveFeature = if (mActiveFeature > 0) mActiveFeature - 1 else 0
+                        smoothScrollTo(mActiveFeature * featureWidth, 0)
+                        return true
+                    }
                 }
             } catch (ignored: Exception) {}
             return false

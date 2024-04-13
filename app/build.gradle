@@ -10,7 +10,7 @@ plugins {
 
 protobuf {
     protoc {
-        artifact = 'com.google.protobuf:protoc:3.19.4'
+        artifact = 'com.google.protobuf:protoc:3.21.7'
     }
     generateProtoTasks {
         all().forEach {
@@ -66,16 +66,13 @@ tasks.register("gen-proto-keycodes") {
     actions.push(new UpdateProtoAction(projectDir.path, android.sdkDirectory.path, android.compileSdk.toString()))
 }
 
-tasks.register("ensure-sources", Exec.class) {
-    it.commandLine(Paths.get(android.sdkDirectory.path, "cmdline-tools", "latest", "bin", "sdkmanager").toString(), "sources;android-" + android.compileSdk.toString())
-}
 
 tasks.preBuild {
-    dependsOn("gen-proto-keycodes", "ensure-sources")
+    dependsOn("gen-proto-keycodes")
 }
 
 android {
-    compileSdk 33
+    compileSdk 34
     defaultConfig {
         applicationId "com.termux.gui"
         minSdk 24
@@ -84,7 +81,7 @@ android {
         versionName "1.0.0"
         externalNativeBuild {
             cmake {
-                arguments ''
+//                 arguments ''
             }
         }
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -123,19 +120,20 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     buildFeatures {
         viewBinding true
+        buildConfig true
     }
     externalNativeBuild {
         cmake {
             path file('src/main/cpp/CMakeLists.txt')
-            version '3.10.2'
+            version '3.22.1'
         }
     }
-    ndkVersion '23.1.7779620'
+    ndkVersion '26.1.10909125'
     namespace 'com.termux.gui'
 }
 
